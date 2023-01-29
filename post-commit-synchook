@@ -1,24 +1,54 @@
-#!/bin/bash
-ENV_FILE_PATH=~/.brakecode/.env
+#!/bin/sh
+ENV_DIR=~/.brakecode
+ENV_FILE_PATH=${ENV_DIR}/.env
 
-if [[ -z ${BRAKECODE_API_KEY} ]]; then
-    BRAKECODE_API_KEY=$(cat $ENV_FILE_PATH | grep BRAKECODE_API_KEY | cut -f2 -d"=");
-    if [[ -z ${BRAKECODE_API_KEY} ]]; then
-        read -sp "Please enter your BrakeCODE API Key: " BRAKECODE_API_KEY;
-        if [[ -z ${BRAKECODE_API_KEY} ]]; then
-            exit 1;
-        else
-            echo "BRAKECODE_API_KEY=${BRAKECODE_API_KEY}" >> $ENV_FILE_PATH;
-            echo "Saved BRAKECODE_API_KEY to $ENV_FILE_PATH";
-        fi
-    fi
+if ! [ -d $ENV_DIR ]; then
+    mkdir $ENV_DIR
+    echo "BRAKECODE_API_KEY=" > $ENV_FILE_PATH
 fi
 
-curl -s -k -L https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
+BRAKECODE_API_KEY=$(cat $ENV_FILE_PATH | grep BRAKECODE_API_KEY | cut -f2 -d"=")
+
+if [ -z "$BRAKECODE_API_KEY" -a -n "$GIT_EXEC_PATH" ]; then
+        printf "Your BrakeCODE API Key is missing.\n"
+        printf "Please run this $0 from a normal shell to enter your BrakeCODE API Key, or update $ENV_FILE_PATH.\n"
+	printf "Synchook exiting...\n"
+        exit 1
+elif [ -z "$BRAKECODE_API_KEY" ]; then
+    printf "Please enter your BrakeCODE API Key: "
+    read -r BRAKECODE_API_KEY
+    if [ -z "$BRAKECODE_API_KEY" ]; then
+	printf "Go to https://brakecode/dashboard to generate a FREE API Key.\n"
+	printf "Synchook exiting...\n"
+	exit 1
+    else
+	printf "Validating key...\n"
+        response=$(curl -s -k -L -w ' %{response_code}' https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
+            -H 'Content-Type: application/json' \
+	    -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }")
+        if [ -n "$(echo $response | egrep "\s200")" ]; then
+            perl -pi -e "s/BRAKECODE_API_KEY=/BRAKECODE_API_KEY=${BRAKECODE_API_KEY}/g" $ENV_FILE_PATH
+            echo "Saved BRAKECODE_API_KEY to $ENV_FILE_PATH"
+	    exit 1
+	else
+	    printf "server response: $response\n\n"
+	    printf "Go to https://brakecode/dashboard to verify and/or generate a FREE API Key.\n"
+            printf "Synchook exiting...\n"
+	    exit 1
+	fi
+    fi
+    exit 0
+fi
+
+response=$(curl -s -k -L -w ' %{response_code}' https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
     -H 'Content-Type: application/json' \
     -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
-    -d "{ \"git_url\": \"$(git config remote.origin.url | base64 -w0)\", \"git_log\": \"$(git log -1 HEAD | base64 -w0)\" }"
+    -d "{ \"git_url\": \"$(git config remote.origin.url | base64 -w0)\", \"git_log\": \"$(git log -1 HEAD | base64 -w0)\" }")
 
-echo -e "\nSynchook successfully synced commit!\n"
+if ! [ -z "$(echo $response | egrep "\s200")" ]; then
+    printf "\n$response\n"
+    exit 1
+fi
 
+printf "\nSynchook successfully synced commit!\n"
 exit 0

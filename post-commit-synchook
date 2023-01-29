@@ -45,7 +45,7 @@ data=$(echo "{
     \"git_repo\": \"$(basename `git rev-parse --show-toplevel`)\",
     \"git_branch\": \"$(git branch --show-current)\",
     \"git_url\": \"$(git config remote.origin.url)\",
-    \"git_log\": \"$(git log -1 HEAD)\"
+    \"git_log\": \"$(git log -1 HEAD | base64 -w0)\"
 }" | base64 -w0)
 response=$(curl -s -k -L -w ' %{response_code}' https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
     -H 'Content-Type: text/plain' \

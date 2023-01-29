@@ -40,10 +40,18 @@ elif [ -z "$BRAKECODE_API_KEY" ]; then
     exit 0
 fi
 
+data=$(echo "{
+    \"hostname\": \"$(hostname)\",
+    \"git_repo\": \"$(basename `git rev-parse --show-toplevel`)\",
+    \"git_branch\": \"$(git branch --show-current)\",
+    \"git_url\": \"$(git config remote.origin.url)\",
+    \"git_log\": \"$(git log -1 HEAD)\"
+}" | base64 -w0)
 response=$(curl -s -k -L -w ' %{response_code}' https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
-    -H 'Content-Type: application/json' \
+    -H 'Content-Type: text/plain' \
     -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
-    -d "{ \"git_url\": \"$(git config remote.origin.url | base64 -w0)\", \"git_log\": \"$(git log -1 HEAD | base64 -w0)\" }")
+    -d ${data}
+    )
 
 if ! [ -z "$(echo $response | egrep "\s200")" ]; then
     printf "\n$response\n"

@@ -1,0 +1,3 @@
+#!/bin/sh
+./post-commit-synchook
+exit 0

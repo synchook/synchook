@@ -1,0 +1,56 @@
+#!/bin/bash
+exit 0
+ENV_FILE_PATH=~/.brakecode/.env
+
+if [[ -z ${BRAKECODE_API_KEY} ]]; then
+    BRAKECODE_API_KEY=$(cat $ENV_FILE_PATH  | grep BRAKECODE_API_KEY | cut -f2 -d"=");
+    if [[ -z ${BRAKECODE_API_KEY} ]]; then
+        read -sp "Please enter your BrakeCODE API Key: " BRAKECODE_API_KEY;
+        if [[ -z ${BRAKECODE_API_KEY} ]]; then
+            exit 1;
+        else
+            echo "BRAKECODE_API_KEY=${BRAKECODE_API_KEY}" >> $ENV_FILE_PATH;
+            echo "Saved BRAKECODE_API_KEY to $ENV_FILE_PATH";
+        fi
+    fi
+fi
+
+response=$(curl -s -k -L https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
+    -H 'Content-Type: application/json' \
+    -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
+    -d "{ \"git_url\": \"$(git config remote.origin.url | base64 -w0)\", \"git_log\": \"$(git log -1 HEAD | base64 -w0)\" }")
+
+if [[ $(echo $response | jq '.authenticate // empty') ]]; then
+    auth_response=$(curl -s $(echo $response | jq -r '.authenticate') \
+        -H 'Content-Type: application/json' \
+        -H 'Accept: application/json' \
+        -d "{ \"client_id\": \"$(echo $response | jq -r '.client_id')\", \"scope\": \"repo,workflow\" }")
+    echo $auth_response
+
+    interval=$(echo $auth_response | jq -r '.interval');
+    user_code=$(echo $auth_response | jq -r '.user_code');
+    device_code=$(echo $auth_response | jq -r '.device_code');
+    echo -e "Enter this code $user_code at the GitHub URL: https://github.com/login/device"
+    echo -n "Waiting for code."
+    while [[ ! $(echo $auth_response | jq '.access_token // empty') ]]; do
+        echo -n "."
+        sleep $interval
+        auth_response=$(curl -s https://github.com/login/oauth/access_token \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json' \
+            -d "{ \"client_id\": \"$(echo $response | jq -r '.client_id')\", \"device_code\": \"$device_code\", \"grant_type\": \"urn:ietf:params:oauth:grant-type:device_code\" }");
+        if [[ "$(echo $auth_response | jq '.status // empty')" =~ 4[0-9]{2} ]]; then
+            break;
+        fi 
+    done
+    if [[ ! $(echo $auth_response | jq '.access_token // empty') ]]; then
+        exit 1;
+    fi
+
+    curl -s -k -L https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
+        -H 'Content-Type: application/json' \
+        -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
+        -d "{ \"git_url\": \"$(git config remote.origin.url | base64 -w0)\", \"git_log\": \"$(git log -1 HEAD | base64 -w0)\", \"github_access_token\": \"$(echo $auth_response | jq -r '.access_token')\" }"
+fi
+
+exit 0

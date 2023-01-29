@@ -29,11 +29,12 @@ The steps to use Synchook are simple:
 2. Configure the [post-commit](https://github.com/synchook/synchook/blob/main/post-commit) hook in your .git/hooks directory.
 
 3. Enjoy the 🔥
+    
+    * As you can see in the yellow highlighted area, all of my external commits are now being reflected in my primary GitHub account contribution graph!
 
 ![image](https://user-images.githubusercontent.com/123592097/215356537-042db8e5-f5aa-4d6c-84f2-c873887c020a.png)
-
 
 ### 
 
 
-[^1]: and  other Git service contribution graphs as well <sub>*haven't gotten that far*</sub>
+[^1]: and other git service (GitLab for example) contribution graphs as well <sub>*haven't gotten that far yet!*</sub>

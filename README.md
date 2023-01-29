@@ -30,6 +30,8 @@ The steps to use Synchook are simple:
 
 3. Enjoy the 🔥
 
+![image](https://user-images.githubusercontent.com/123592097/215356537-042db8e5-f5aa-4d6c-84f2-c873887c020a.png)
+
 
 ### 
 

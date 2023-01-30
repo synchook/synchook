@@ -27,6 +27,17 @@ The steps to use Synchook are simple:
       My Synchook repo for example: [https://github.com/synchook/june07](https://github.com/synchook/june07)
 
 2. Configure the [post-commit](https://github.com/synchook/synchook/blob/main/post-commit) hook in your .git/hooks directory.
+    * This step can be done in a number of ways (symlink, file copy, etc) but the way I recommend is by cloning the synchook repo and then symlinking the needed hooks. This way you can get any updates accross all repos using the hooks with a single git pull.
+    * You can also use the git template directory to automatically include the hooks in each new repo by default.
+
+  ### Recommended way of configuring Synchook
+  ```
+    cd ~/my-code-dir
+    git clone https://github.com/synchook/synchook.git synchook
+    cd my-project/.git/hooks
+    ln -s ../../../synchook/post-commit
+    ln -s ../../../synchook/post-commit-synchook
+  ```
 
 3. Enjoy the 🔥
     

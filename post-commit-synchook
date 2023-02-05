@@ -53,8 +53,9 @@ response=$(curl -s -k -L -w ' %{response_code}' https://8w1i.ngrok-dns.june07.co
     -d ${data}
     )
 
-if ! [ -z "$(echo $response | egrep "\s200")" ]; then
+if [ -z "$(echo $response | egrep "\s200")" ]; then
     printf "\n$response\n"
+    printf "Sync failed. Synchook exiting...\n"
     exit 1
 fi
 

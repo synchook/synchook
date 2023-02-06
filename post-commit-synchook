@@ -46,10 +46,15 @@ elif [ -z "$BRAKECODE_API_KEY" ]; then
     exit 0
 fi
 
+current=$(git branch --show-current 2>&1 > /dev/null)
+if [ $(echo $current | grep -c "error: unknown option") -ne 0 ]; then
+    current=$(git branch --list | grep "*" | cut -f2 -d" ")
+fi
+
 data=$(echo "{
     \"hostname\": \"$(hostname)\",
     \"git_repo\": \"$(basename `git rev-parse --show-toplevel`)\",
-    \"git_branch\": \"$(git branch --show-current)\",
+    \"git_branch\": \"$current\",
     \"git_url\": \"$(git config remote.origin.url)\",
     \"git_log\": \"$(git log -1 HEAD | base64 -w0)\"
 }" | base64 -w0)

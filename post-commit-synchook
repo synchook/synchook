@@ -1,14 +1,19 @@
 #!/bin/sh
 ENV_DIR=~/.brakecode
 ENV_FILE_PATH=${ENV_DIR}/.env
+DEFAULT_SYNCHOOK_HOST=api.brakecode.com
 
 if ! [ -d $ENV_DIR ]; then
     mkdir $ENV_DIR
     echo "BRAKECODE_API_KEY=" > $ENV_FILE_PATH
 fi
 
-BRAKECODE_API_KEY=$(cat $ENV_FILE_PATH | grep BRAKECODE_API_KEY | cut -f2 -d"=")
+BRAKECODE_API_KEY=$(cat $ENV_FILE_PATH | grep BRAKECODE_API_KEY | grep -v "#" | cut -f2 -d"=")
+SYNCHOOK_HOST=$(cat $ENV_FILE_PATH | grep SYNCHOOK_HOST | grep -v "#" | cut -f2 -d"=")
 
+if [ -z "$SYNCHOOK_HOST" ]; then
+    SYNCHOOK_HOST=$DEFAULT_SYNCHOOK_HOST
+fi
 if [ -z "$BRAKECODE_API_KEY" -a -n "$GIT_EXEC_PATH" ]; then
         printf "Your BrakeCODE API Key is missing.\n"
         printf "Please run this $0 from a normal shell to enter your BrakeCODE API Key, or update $ENV_FILE_PATH.\n"
@@ -23,7 +28,7 @@ elif [ -z "$BRAKECODE_API_KEY" ]; then
 	exit 1
     else
 	printf "Validating key...\n"
-        response=$(curl -s -k -L -w ' %{response_code}' https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
+        response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
             -H 'Content-Type: application/json' \
 	    -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }")
         if [ -n "$(echo $response | egrep "\s200")" ]; then
@@ -47,7 +52,7 @@ data=$(echo "{
     \"git_url\": \"$(git config remote.origin.url)\",
     \"git_log\": \"$(git log -1 HEAD | base64 -w0)\"
 }" | base64 -w0)
-response=$(curl -s -k -L -w ' %{response_code}' https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
+response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
     -H 'Content-Type: text/plain' \
     -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
     -d ${data}

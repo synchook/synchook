@@ -30,6 +30,7 @@ elif [ -z "$BRAKECODE_API_KEY" ]; then
 	printf "Validating key...\n"
         response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
             -H 'Content-Type: application/json' \
+            -H "x-environment: \"canary\"" \
 	    -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }")
         if [ -n "$(echo $response | egrep "\s200")" ]; then
             perl -pi -e "s/BRAKECODE_API_KEY=/BRAKECODE_API_KEY=${BRAKECODE_API_KEY}/g" $ENV_FILE_PATH
@@ -55,6 +56,7 @@ data=$(echo "{
 response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
     -H 'Content-Type: text/plain' \
     -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
+    -H "x-environment: \"canary\"" \
     -d ${data}
     )
 

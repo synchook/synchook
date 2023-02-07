@@ -38,9 +38,13 @@ The steps to use Synchook are simple:
     ln -s ../../../synchook/post-commit
     ln -s ../../../synchook/post-commit-synchook
   ```
+### Example of running synchook for the first time
+* note this specific example does not correlate to other examples shown
+
+![synchook-initial-run](https://user-images.githubusercontent.com/123592097/217370845-35de4d07-21cf-4321-8095-992a6d35e8b4.gif)
 
 3. Enjoy the 🔥
-    
+
     * As you can see in the yellow highlighted area, all of my external commits are now being reflected in my primary GitHub account contribution graph!
 
 ![image](https://user-images.githubusercontent.com/123592097/215356537-042db8e5-f5aa-4d6c-84f2-c873887c020a.png)

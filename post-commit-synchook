@@ -23,7 +23,7 @@ elif [ -z "$BRAKECODE_API_KEY" ]; then
     printf "Please enter your BrakeCODE API Key: "
     read -r BRAKECODE_API_KEY
     if [ -z "$BRAKECODE_API_KEY" ]; then
-	printf "Go to https://brakecode/dashboard to generate a FREE API Key.\n"
+	printf "Go to https://brakecode.com/dashboard?panel=synchook to generate a FREE API Key.\n"
 	printf "Synchook exiting...\n"
 	exit 1
     else
@@ -38,7 +38,7 @@ elif [ -z "$BRAKECODE_API_KEY" ]; then
 	    exit 1
 	else
 	    printf "server response: $response\n\n"
-	    printf "Go to https://brakecode/dashboard to verify and/or generate a FREE API Key.\n"
+	    printf "Go to https://brakecode.com/dashboard?panel=synchook to verify and/or generate a FREE API Key.\n"
             printf "Synchook exiting...\n"
 	    exit 1
 	fi

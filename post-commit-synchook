@@ -17,14 +17,14 @@ fi
 if [ -z "$BRAKECODE_API_KEY" -a $(env | grep -c "GIT_") -gt 0 ]; then
         printf "Your BrakeCODE API Key is missing.\n"
         printf "Please run this $0 from a normal shell to enter your BrakeCODE API Key, or update $ENV_FILE_PATH.\n"
-	printf "Synchook exiting...\n"
+	    printf "Synchook exiting...\n\n"
         exit 1
 elif [ -z "$BRAKECODE_API_KEY" ]; then
     printf "Please enter your BrakeCODE API Key: "
     read -r BRAKECODE_API_KEY
     if [ -z "$BRAKECODE_API_KEY" ]; then
 	printf "Go to https://brakecode.com/dashboard?panel=synchook to generate a FREE API Key.\n"
-	printf "Synchook exiting...\n"
+	printf "Synchook exiting...\n\n"
 	exit 1
     else
 	printf "Validating key...\n"
@@ -35,11 +35,12 @@ elif [ -z "$BRAKECODE_API_KEY" ]; then
         if [ -n "$(echo $response | egrep "\s200")" ]; then
             perl -pi -e "s/BRAKECODE_API_KEY=/BRAKECODE_API_KEY=${BRAKECODE_API_KEY}/g" $ENV_FILE_PATH
             echo "Saved BRAKECODE_API_KEY to $ENV_FILE_PATH"
+            printf "Synchok is now enabled!\n\n"
 	    exit 1
 	else
 	    printf "server response: $response\n\n"
 	    printf "Go to https://brakecode.com/dashboard?panel=synchook to verify and/or generate a FREE API Key.\n"
-            printf "Synchook exiting...\n"
+        printf "Synchook exiting...\n\n"
 	    exit 1
 	fi
     fi
@@ -67,9 +68,9 @@ response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/sy
 
 if [ -z "$(echo $response | egrep "\s200")" ]; then
     printf "\n$response\n"
-    printf "Sync failed. Synchook exiting...\n"
+    printf "Sync failed. Synchook exiting...\n\n"
     exit 1
 fi
 
-printf "\nSynchook successfully synced commit!\n"
+printf "\nSynchook successfully synced commit!\n\n"
 exit 0

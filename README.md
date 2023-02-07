@@ -30,11 +30,11 @@ The steps to use Synchook are simple:
     * This step can be done in a number of ways (symlink, file copy, etc) but the way I recommend is by cloning the synchook repo and then symlinking the needed hooks. This way you can get any updates accross all repos using the hooks with a single git pull.
     * You can also use the git template directory to automatically include the hooks in each new repo by default.
 
-  ### Recommended way of configuring Synchook
+  ### Recommended way of configuring Synchook (assuming your home directory is the base subdirectory for your various code projects)
   ```
-    cd ~/my-code-dir
+    cd ~
     git clone https://github.com/synchook/synchook.git synchook
-    cd my-project/.git/hooks
+    cd ~/my-project/.git/hooks
     ln -s ../../../synchook/post-commit
     ln -s ../../../synchook/post-commit-synchook
   ```

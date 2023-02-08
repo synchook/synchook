@@ -49,6 +49,12 @@ The steps to use Synchook are simple:
 
 ![image](https://user-images.githubusercontent.com/123592097/215356537-042db8e5-f5aa-4d6c-84f2-c873887c020a.png)
 
+* on the BrakeCODE dashboard you will be able to see your realtime API call log
+![image](https://user-images.githubusercontent.com/123592097/217401608-afd32412-e6ca-4a8d-9308-e70780fa103f.png)
+
+* and on GitHub you will notice an update was made to your synchook repo
+![image](https://user-images.githubusercontent.com/123592097/217401982-74915c33-774a-4278-b9d8-1d4c747d7605.png)
+
 ### 
 
 

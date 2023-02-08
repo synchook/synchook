@@ -20,7 +20,7 @@ I wrote Synchook because a lot of my development time (in private/external repos
 
 The steps to use Synchook are simple:
 
-1. Sign up and obtain a free API key at https://brakecode.com/synchook.
+1. Sign up and obtain a free API key at https://brakecode.com/synchook. IMPORTANT NOTE: Currently you must use the Canary version of BrakeCODE Dashboard to access this feature.
     * If you're currently a BrakeCODE user just link your GitHub account using the BrakeCODE Dashboard, and new users simply need to signup by authenticating with their GitHub account.
     * A secondary tracking repo is automatically created for you at https://github.com/synchook/your_github_username of which you will have access to as a collaborator and via the synchook hook.<br>
     

@@ -1,11 +1,16 @@
 #!/bin/sh
-ENV_DIR=~/.brakecode
-ENV_FILE_PATH=${ENV_DIR}/.env
+BRAKECODE_ENV_DIR1=~/.brakecode
+BRAKECODE_ENV_DIR2=${PWD}/.brakecode
+ENV_FILE_PATH=${BRAKECODE_ENV_DIR1}/.env
 DEFAULT_SYNCHOOK_HOST=api.brakecode.com
 
-if ! [ -d $ENV_DIR ]; then
-    mkdir $ENV_DIR
+if [ ! -d $BRAKECODE_ENV_DIR1 ]; then
+    mkdir $BRAKECODE_ENV_DIR1
     echo "BRAKECODE_API_KEY=" > $ENV_FILE_PATH
+fi
+if [ -d $BRAKECODE_ENV_DIR2 ]; then
+    printf "Using environment directory path ${BRAKECODE_ENV_DIR2}\n"
+    ENV_FILE_PATH=${BRAKECODE_ENV_DIR2}/.env
 fi
 
 BRAKECODE_API_KEY=$(cat $ENV_FILE_PATH | grep BRAKECODE_API_KEY | grep -v "#" | cut -f2 -d"=")

@@ -4,7 +4,7 @@ Meaning that git commits you perform on other services such as [GitLab](https://
 
 ## What is it?
 
-Synchook works by using a simply git hook that calls its secure cloud service to sync your commit logs to a secondary GitHub repo. The secondary repo doesn't store any files but rather the commit metadata (git log, sha, repo, branch, url), thus privacy is maintained. Contributions to the secondary repo are then counted/reflected on your GitHub contributions graph.
+Synchook works by using a git hook that calls its secure cloud service to sync your commit logs to a secondary GitHub repo. The secondary repo doesn't store any files but rather the commit metadata (git log, sha, repo, branch, url), thus privacy is maintained. Contributions to the secondary repo are then counted/reflected on your GitHub contributions graph.
 
 ## Things that normally get in the way of universal contribution tracking are...
 

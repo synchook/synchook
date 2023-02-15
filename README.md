@@ -24,15 +24,18 @@ The steps to use Synchook are simple:
     * Sign up and obtain a free API key at https://brakecode.com/synchook.
 
         * If you're currently a BrakeCODE user just link your GitHub account using the BrakeCODE Dashboard, and new users simply need to signup by authenticating with their GitHub account.
-        * A secondary tracking repo is automatically created for you at https://github.com/synchook/your_github_username. You will receive an invitation to be a collaborator for your repo and have access via synchook as well.<br><br>
+        * A secondary tracking repo is automatically created for you at https://github.com/synchook/your_github_username. You will receive an invitation to be the sole collaborator (excluding Synchook) for this secondary repo and have access via synchook as well.
+        * The BrakeCODE Dashboard will show your commit activity in real time from the Synchook panel.
+        <br><br>
 
         My Synchook repo for example: [https://github.com/synchook/june07](https://github.com/synchook/june07)
 
         **IMPORTANT NOTE**: Currently you must use the Canary version of BrakeCODE Dashboard to access this feature.
     * Or use the GitHub App at https://github.com/apps/kitchen-synchook
         * The App will allow you to try a limited version of Synchook using a shared API key ([shared API key endpoint](https://api.brakecode.com/api/v1/synchook/apikey))
-        * The App requests minimal permissions and is used to give you collaborator access to the shared *kitchen sync* repo https://github.com/synchook/kitchen 
-        * You won't have access to the BrakeCODE Dashboard which provides additional features.
+        * The App requests minimal permissions and is used to give you collaborator access to the shared *kitchen sync* repo https://github.com/synchook/kitchen where you will see your commit updates.
+        * Your own commit graph will start reflecting commits made to the shared kitchen sync repo.
+        * You won't have access to the BrakeCODE Dashboard which provides additional features.<br><br>
 
 2. Then configure the [post-commit](https://github.com/synchook/synchook/blob/main/post-commit) hook in your .git/hooks directory.
     * This step can be done in a number of ways (symlink, file copy, etc) but the way I recommend is by cloning the synchook repo and then symlinking the needed hooks. This way you can get any updates accross all repos using the hooks with a single git pull.

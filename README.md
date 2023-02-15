@@ -20,13 +20,21 @@ I wrote Synchook because a lot of my development time (in private/external repos
 
 The steps to use Synchook are simple:
 
-1. Sign up and obtain a free API key at https://brakecode.com/synchook. IMPORTANT NOTE: Currently you must use the Canary version of BrakeCODE Dashboard to access this feature.
-    * If you're currently a BrakeCODE user just link your GitHub account using the BrakeCODE Dashboard, and new users simply need to signup by authenticating with their GitHub account.
-    * A secondary tracking repo is automatically created for you at https://github.com/synchook/your_github_username. You will receive an invitation to be a collaborator for your repo and have access via synchook as well.<br>
-    
-      My Synchook repo for example: [https://github.com/synchook/june07](https://github.com/synchook/june07)
+1. For step 1 there are two options...
+    * Sign up and obtain a free API key at https://brakecode.com/synchook.
 
-2. Configure the [post-commit](https://github.com/synchook/synchook/blob/main/post-commit) hook in your .git/hooks directory.
+        * If you're currently a BrakeCODE user just link your GitHub account using the BrakeCODE Dashboard, and new users simply need to signup by authenticating with their GitHub account.
+        * A secondary tracking repo is automatically created for you at https://github.com/synchook/your_github_username. You will receive an invitation to be a collaborator for your repo and have access via synchook as well.<br><br>
+
+        My Synchook repo for example: [https://github.com/synchook/june07](https://github.com/synchook/june07)
+
+        **IMPORTANT NOTE**: Currently you must use the Canary version of BrakeCODE Dashboard to access this feature.
+    * Or use the GitHub App at https://github.com/apps/kitchen-synchook
+        * The App will allow you to try a limited version of Synchook using a shared API key ([shared API key endpoint](https://api.brakecode.com/api/v1/synchook/apikey))
+        * The App requests minimal permissions and is used to give you collaborator access to the shared *kitchen sync* repo https://github.com/synchook/kitchen 
+        * You won't have access to the BrakeCODE Dashboard which provides additional features.
+
+2. Then configure the [post-commit](https://github.com/synchook/synchook/blob/main/post-commit) hook in your .git/hooks directory.
     * This step can be done in a number of ways (symlink, file copy, etc) but the way I recommend is by cloning the synchook repo and then symlinking the needed hooks. This way you can get any updates accross all repos using the hooks with a single git pull.
     * You can also use the git template directory to automatically include the hooks in each new repo by default.
 

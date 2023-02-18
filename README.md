@@ -1,5 +1,7 @@
 Synchook is ✨ _special_ ✨ because it's a simple way to track (via the GitHub[^1] contribution graph) your git contributions **universally across all of your git workflows**.
 
+![Untitled design](https://user-images.githubusercontent.com/123592097/219872907-e5854b1b-831f-4312-a8df-2f9bd5693322.gif)
+
 Meaning that git commits you perform on other services such as [GitLab](https://gitlab.com/), [Bitbucket](https://bitbucket.org/), or [Code Commit](https://aws.amazon.com/codecommit/), or even locally, can all be counted and displayed on your Github graph.
 
 ## How does it work?

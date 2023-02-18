@@ -2,7 +2,7 @@ Synchook is ✨ _special_ ✨ because it's a simple way to track (via the GitHub
 
 Meaning that git commits you perform on other services such as [GitLab](https://gitlab.com/), [Bitbucket](https://bitbucket.org/), or [Code Commit](https://aws.amazon.com/codecommit/), or even locally, can all be counted and displayed on your Github graph.
 
-## What is it?
+## How does it work?
 
 Synchook works by using a git hook that calls its secure cloud service to sync your commit logs to a secondary GitHub repo. The secondary repo doesn't store any files but rather the commit metadata (git log, sha, repo, branch, url), thus privacy is maintained. Contributions to the secondary repo are then counted/reflected on your GitHub contributions graph.
 

@@ -67,7 +67,25 @@ The steps to use Synchook are simple:
     * And on GitHub you will notice an update was made to your synchook repo.
       ![image](https://user-images.githubusercontent.com/123592097/217401982-74915c33-774a-4278-b9d8-1d4c747d7605.png)
 
-### 
+## Options
 
+  * ### Filter and mask true repo names<br>
+    To add additional privacy, you can filter repo names via the FILTER configuration elements using the syntax `FILTER=<match>:<replacement>` and the replacement name will be used for commits to the secondary repo.
+
+    Example:
+      * The following configuration will translate a repo named "super-private-repo" into "super-public-repo"
+
+        ```
+          FILTER=super-private-repo:super-public-repo
+        ```
+
+      * Multiple filters are supported so a second filter could be added to translate "veryPrivateRepo" into "openRepo"
+
+        ```
+          FILTER=super-private-repo:super-public-repo
+          FILTER=veryPrivateRepo:openRepo
+        ```
+
+    **Note: Spaces in the repo folder name are not yet suppored.**
 
 [^1]: and other git service (GitLab for example) contribution graphs as well <sub>*haven't gotten that far yet!*</sub>

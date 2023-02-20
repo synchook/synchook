@@ -20,7 +20,7 @@ FILTERS=$(cat $ENV_FILE_PATH | grep -G "^FILTER=" | grep -v "#" | cut -f2 -d"=")
 if [ -z "$SYNCHOOK_HOST" ]; then
     SYNCHOOK_HOST=$DEFAULT_SYNCHOOK_HOST
 fi
-if [ -z "$BRAKECODE_API_KEY" -a $(env | grep -c "GIT_") -gt 0 ]; then
+if [ -z "$BRAKECODE_API_KEY" -a $(env | grep -c -e "^GIT_") -gt 1 ]; then
         printf "Your BrakeCODE API Key is missing.\n"
         printf "Please run this $0 from a normal shell to enter your BrakeCODE API Key, or update $ENV_FILE_PATH.\n"
 	    printf "Synchook exiting...\n\n"

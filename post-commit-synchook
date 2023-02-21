@@ -64,14 +64,17 @@ for filter in $FILTERS; do
     replacement=$(echo $filter | cut -f2 -d":")
     git_repo=$(echo $git_repo | sed s/$match/$replacement/g)
 done
-
+base64args="-w0"
+if [ -n $(echo $OSTYPE | egrep "darwin") ]; then
+    base64args=""
+fi
 data=$(echo "{
     \"hostname\": \"$(hostname)\",
     \"git_repo\": \"$git_repo\",
     \"git_branch\": \"$current\",
     \"git_url\": \"$(git config remote.origin.url)\",
-    \"git_log\": \"$(git log -1 HEAD | base64 -w0)\"
-}" | base64 -w0)
+    \"git_log\": \"$(git log -1 HEAD | base64 $base64args)\"
+}" | base64 $base64args)
 response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
     -H 'Content-Type: text/plain' \
     -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \

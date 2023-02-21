@@ -1,4 +1,4 @@
-#!/bin/sh -xv
+#!/bin/sh
 BRAKECODE_ENV_DIR1=~/.brakecode
 BRAKECODE_ENV_DIR2=${PWD}/.brakecode
 ENV_FILE_PATH=${BRAKECODE_ENV_DIR1}/.env

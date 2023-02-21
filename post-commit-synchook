@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -xv
 BRAKECODE_ENV_DIR1=~/.brakecode
 BRAKECODE_ENV_DIR2=${PWD}/.brakecode
 ENV_FILE_PATH=${BRAKECODE_ENV_DIR1}/.env
@@ -65,7 +65,7 @@ for filter in $FILTERS; do
     git_repo=$(echo $git_repo | sed s/$match/$replacement/g)
 done
 base64args="-w0"
-if [ -n $(echo $OSTYPE | egrep "darwin") ]; then
+if [ $(echo $OSTYPE | egrep "darwin") ]; then
     base64args=""
 fi
 data=$(echo "{

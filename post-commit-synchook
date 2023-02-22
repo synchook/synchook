@@ -3,6 +3,8 @@ BRAKECODE_ENV_DIR1=~/.brakecode
 BRAKECODE_ENV_DIR2=${PWD}/.brakecode
 ENV_FILE_PATH=${BRAKECODE_ENV_DIR1}/.env
 DEFAULT_SYNCHOOK_HOST=api.brakecode.com
+CURL_OPTIONS="-k"
+WGET_OPTIONS="--no-check-certificate"
 
 if [ ! -d $BRAKECODE_ENV_DIR1 ]; then
     mkdir $BRAKECODE_ENV_DIR1
@@ -19,6 +21,8 @@ FILTERS=$(cat $ENV_FILE_PATH | grep -G "^FILTER=" | grep -v "#" | cut -f2 -d"=")
 
 if [ -z "$SYNCHOOK_HOST" ]; then
     SYNCHOOK_HOST=$DEFAULT_SYNCHOOK_HOST
+    CURL_OPTIONS=
+    WGET_OPTIONS=
 fi
 if [ -z "$BRAKECODE_API_KEY" -a $(env | grep -c -e "^GIT_") -gt 1 ]; then
         printf "Your BrakeCODE API Key is missing.\n"
@@ -34,10 +38,17 @@ elif [ -z "$BRAKECODE_API_KEY" ]; then
 	exit 1
     else
 	printf "Validating key...\n"
-        response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
-            -H 'Content-Type: application/json' \
-            -H "x-environment: \"canary\"" \
-	    -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }")
+        if [ $(which curl) ]; then
+            response=$(curl -s ${CURL_OPTIONS} -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
+                -H 'Content-Type: application/json' \
+                -H "x-environment: \"canary\"" \
+                -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }")
+        else
+            response=$(wget -q -O - $WGET_OPTIONS --max-redirect=20 --server-response URL-response https://$SYNCHOOK_HOST/api/v1/synchook \
+                --header='Content-Type: application/json' \
+                --header="x-environment: \"canary\"" \
+                --header="x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" 2>&1 | egrep "\s200|^\"")
+        fi
         if [ -n "$(echo $response | egrep "\s200")" ]; then
             perl -pi -e "s/BRAKECODE_API_KEY=/BRAKECODE_API_KEY=${BRAKECODE_API_KEY}/g" $ENV_FILE_PATH
             echo "Saved BRAKECODE_API_KEY to $ENV_FILE_PATH"

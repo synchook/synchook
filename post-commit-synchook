@@ -86,12 +86,19 @@ data=$(echo "{
     \"git_url\": \"$(git config remote.origin.url)\",
     \"git_log\": \"$(git log -1 HEAD | base64 $base64args)\"
 }" | base64 $base64args)
-response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
-    -H 'Content-Type: text/plain' \
-    -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
-    -H "x-environment: \"canary\"" \
-    -d ${data}
-    )
+if [ $(which curl) ]; then
+    response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
+        -H 'Content-Type: text/plain' \
+        -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
+        -H "x-environment: \"canary\"" \
+        -d ${data})
+else
+    response=$(wget -q -O - $WGET_OPTIONS --max-redirect=20 --server-response URL-response https://$SYNCHOOK_HOST/api/v1/synchook \
+        --header='Content-Type: text/plain' \
+        --header="x-environment: \"canary\"" \
+        --header="x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
+        --post-data="${data}" 2>&1 | egrep "\s200|^\"")
+fi
 
 if [ -z "$(echo $response | egrep "\s200")" ]; then
     printf "\n$response\n"

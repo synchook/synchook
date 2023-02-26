@@ -43,7 +43,9 @@ The steps to use Synchook are simple:
     * This step can be done in a number of ways (symlink, file copy, etc) but the way I recommend is by cloning the synchook repo and then symlinking the needed hooks. This way you can get any updates accross all repos using the hooks with a single git pull.
     * You can also use the git template directory to automatically include the hooks in each new repo by default.
 
-  ### Recommended way of configuring Synchook (assuming your home directory is the base subdirectory for your various code projects)
+  ## Recommended way of configuring Synchook (assuming your home directory is the base subdirectory for your various code projects)
+  There's actually [a script](https://github.com/synchook/synchook/blob/main/scripts/add.sh) for the following process now, so you could use https://github.com/synchook/synchook/blob/main/scripts/add.sh to add new repos to track...
+
   ```
     cd ~
     git clone https://github.com/synchook/synchook.git synchook
@@ -51,7 +53,7 @@ The steps to use Synchook are simple:
     ln -s ../../../synchook/post-commit
     ln -s ../../../synchook/post-commit-synchook
   ```
-### Example of running synchook for the first time
+## Example of running synchook for the first time
 * note this specific example does not correlate to other examples shown
 
 ![synchook-initial-run](https://user-images.githubusercontent.com/123592097/217370845-35de4d07-21cf-4321-8095-992a6d35e8b4.gif)

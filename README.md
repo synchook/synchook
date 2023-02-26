@@ -110,4 +110,10 @@ The steps to use Synchook are simple:
 
     **Note: Spaces in the repo folder name are not yet suppored.**
 
+## FAQ
+
+  1. **Can it sync my past commits?**<br>
+    *Synchook is more concerned with looking forward and not back... you know what they say about such things. That said, there are other great solutions out there to suit that specific use case, like one I just found out about https://github.com/kefimochi/sync-contribution-graph.*
+
+<br><br><br><br>
 [^1]: and other git service (GitLab for example) contribution graphs as well <sub>*haven't gotten that far yet!*</sub>

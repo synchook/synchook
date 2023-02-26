@@ -1,6 +1,17 @@
 Synchook is ✨ _special_ ✨ because it's a simple way to track (via the GitHub[^1] contribution graph) your git contributions **universally across all of your git workflows**.
 
+Great if you want to capture your true commit activity on the ubiquitous GitHub contribution graph but... use other git workflows for the majority of your work (private, non-GitHub, local)
+
+* works regardless of what workflow you happen to have... (GitLab, BitBucket, CodeCommit, local repo only i.e. plain Git, ...)
+* smartly tracks useful metadata only and is customizable for privacy, etc.
+* full control of what's shared and what's not via filtering.
+* not limited to main (or any specific branch) to work
+
+Like many, much of my work is not in public GitHub projects. But after just adding Synchook to a few of the private repos I work on, I saw the following change in my graph...
+
 ![Before after Synchook](https://user-images.githubusercontent.com/123592097/221390430-a81ed95a-b8a0-4004-b752-99be3a241246.png)
+
+## Some folks obviously share my sentiment and were/are looking for the solution Synchook provides...
 
 ![Untitled design](https://user-images.githubusercontent.com/123592097/219872907-e5854b1b-831f-4312-a8df-2f9bd5693322.gif)
 

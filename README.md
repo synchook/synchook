@@ -9,7 +9,7 @@ Great if you want to capture your true commit activity on the ubiquitous GitHub 
 
 Like many, much of my work is not in public GitHub projects. But after just adding Synchook to a few of the private repos I work on, I saw the following change in my graph...
 
-![Before after Synchook](https://user-images.githubusercontent.com/123592097/221390430-a81ed95a-b8a0-4004-b752-99be3a241246.png)
+![Before after Synchook](https://user-images.githubusercontent.com/123592097/221391361-d54e21f6-443a-4f56-a164-601b66b7d30e.png)
 
 ## Some folks obviously share my sentiment and were/are looking for the solution Synchook provides...
 

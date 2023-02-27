@@ -90,8 +90,7 @@ The steps to use Synchook are simple:
       ![image](https://user-images.githubusercontent.com/123592097/217401982-74915c33-774a-4278-b9d8-1d4c747d7605.png)
 
 ## Options
-  * ### Filter and mask true repo names
-    <br>
+  * ### Filter and mask 🎭 true repo names
     To add additional privacy, you can filter repo names via the FILTER configuration elements using the syntax `FILTER=<match>:<replacement>` and the replacement name will be used for commits to the secondary repo.
 
     Example:
@@ -109,6 +108,22 @@ The steps to use Synchook are simple:
         ```
 
     **Note: Spaces in the repo folder name are not yet suppored.**
+
+  * ### Exclude repos
+    To exclude repos that are already directly counted by the git providers normal mechanism, you can use the `EXCLUDE` config key. See [this issue](https://github.com/synchook/synchook/issues/5) for more detail on what this option is for.
+
+    Example:
+      * The following configuration will exclude the GitHub repo nimv3 from being committed to the secondary repo as it would be redundant to do so. This configuration will exclude all branches of the nimv3 repo.
+
+      ```
+              EXCLUDE=github:nimv3
+      ```
+      * To simply exclude a single branch, you would use this configuration:
+      
+      ```
+              EXCLUDE=github:nimv3:master
+      ```
+    To get a better idea on exactly what you would need to add as your EXCLUDE config, just look at the secondary repo folder structure for a hint.
 
 ## FAQ
 

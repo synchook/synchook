@@ -79,6 +79,10 @@ base64args="-w0"
 if [ $(echo $OSTYPE | egrep "darwin") ]; then
     base64args=""
 fi
+
+appConfig=$(echo "{
+    exclude: $(cat $ENV_FILE_PATH | egrep "^EXCLUDE=" | cut -f2 -d"=" | tr "\n" "," | sed 's/,*$//g')
+}" | base64 $base64args)
 data=$(echo "{
     \"hostname\": \"$(hostname)\",
     \"git_repo\": \"$git_repo\",
@@ -91,12 +95,14 @@ if [ $(which curl) ]; then
         -H 'Content-Type: text/plain' \
         -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
         -H "x-environment: \"canary\"" \
+        -H "x-app-config: \"${appConfig}\"" \
         -d ${data})
 else
     response=$(wget -q -O - $WGET_OPTIONS --max-redirect=20 --server-response URL-response https://$SYNCHOOK_HOST/api/v1/synchook \
         --header='Content-Type: text/plain' \
         --header="x-environment: \"canary\"" \
         --header="x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
+        --header="x-app-config: \"${appConfig}\"" \
         --post-data="${data}" 2>&1 | egrep "\s200|^\"")
 fi
 

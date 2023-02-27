@@ -82,7 +82,7 @@ fi
 
 appConfig=$(echo "{
     \"exclude\": \"$(cat $ENV_FILE_PATH | egrep "^EXCLUDE=" | cut -f2 -d"=" | tr "\n" "," | sed 's/,*$//g')\"
-}" | base64 $base64args)
+}" | jq -cr | base64 $base64args)
 data=$(echo "{
     \"hostname\": \"$(hostname)\",
     \"git_repo\": \"$git_repo\",

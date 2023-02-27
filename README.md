@@ -115,14 +115,14 @@ The steps to use Synchook are simple:
     Example:
       * The following configuration will exclude the GitHub repo nimv3 from being committed to the secondary repo as it would be redundant to do so. This configuration will exclude all branches of the nimv3 repo.
 
-      ```
+        ```
               EXCLUDE=github:nimv3
-      ```
+        ```
       * To simply exclude a single branch, you would use this configuration:
       
-      ```
+        ```
               EXCLUDE=github:nimv3:master
-      ```
+        ```
     To get a better idea on exactly what you would need to add as your EXCLUDE config, just look at the secondary repo folder structure for a hint.
 
 ## FAQ

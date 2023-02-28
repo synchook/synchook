@@ -28,6 +28,13 @@ Synchook works by using [a git hook](https://git-scm.com/book/en/v2/Customizing-
 * The backend server authorization component (Auth0/Okta) only requests enough permissions from your git identity provider (GitHub) to verify and matchup the metadata you send with the correct secondary tracking account which is based on your git identity but which has zero privileges to any of your repos.
 * Same with the [GitHub App](https://github.com/apps/kitchen-synchook), it required minimal permissions.
 
+## Is this just a *hack* or *gaming* the system?
+**Absolutely not.** The reason I wrote this was to capture my *ACTUAL* and *MEANINGFUL (though that part could be argued)* code contributions made using git as a tool and yet which fell outside of the scope of what GitHub did count or even could practically count (considering they don't own the entire software development pipeline... yet 🤨)
+
+As far as all the "solutions" out there to game the system... I'll just say this isn't one of them.
+
+The entire point is to more effectively capture your true workflow in an effort to build upon a positive feedback cycle.
+
 ## Things that normally get in the way of universal contribution tracking are...
 
 * private repos

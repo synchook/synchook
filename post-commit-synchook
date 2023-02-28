@@ -81,8 +81,9 @@ if [ $(echo $OSTYPE | egrep "darwin") ]; then
 fi
 
 appConfig=$(echo "{
+    \"git_user_email\": \"$(cat $ENV_FILE_PATH | egrep "^GIT_USER_EMAIL=" | cut -f2 -d"=" | tr "\n" "," | sed 's/,*$//g')\",
     \"exclude\": \"$(cat $ENV_FILE_PATH | egrep "^EXCLUDE=" | cut -f2 -d"=" | tr "\n" "," | sed 's/,*$//g')\"
-}" | jq -cr | base64 $base64args)
+}" | jq -cr 'del(..|select(. == ""))' | base64 $base64args)
 data=$(echo "{
     \"hostname\": \"$(hostname)\",
     \"git_repo\": \"$git_repo\",

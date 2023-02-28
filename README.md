@@ -13,7 +13,7 @@ Like many, much of my work is not in public GitHub projects. But after just addi
 
 ## Wishing for the solution Synchook provides...
 
-![Untitled design](https://user-images.githubusercontent.com/123592097/219872907-e5854b1b-831f-4312-a8df-2f9bd5693322.gif)
+![Synchook Wishes](https://user-images.githubusercontent.com/11353590/221730634-009f7e10-d2ed-4e79-8d65-2514148c9f24.gif)
 
 Meaning that git commits you perform on other services such as [GitLab](https://gitlab.com/), [Bitbucket](https://bitbucket.org/), or [Code Commit](https://aws.amazon.com/codecommit/), or even locally, can all be counted and displayed on your Github graph.
 

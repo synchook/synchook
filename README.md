@@ -13,7 +13,7 @@ Like many, much of my work is not in public GitHub projects. But after just addi
 
 ## Wishing for the solution Synchook provides...
 
-![Untitled design](https://user-images.githubusercontent.com/123592097/219872907-e5854b1b-831f-4312-a8df-2f9bd5693322.gif)
+![Synchook Wishes](https://user-images.githubusercontent.com/11353590/221730634-009f7e10-d2ed-4e79-8d65-2514148c9f24.gif)
 
 Meaning that git commits you perform on other services such as [GitLab](https://gitlab.com/), [Bitbucket](https://bitbucket.org/), or [Code Commit](https://aws.amazon.com/codecommit/), or even locally, can all be counted and displayed on your Github graph.
 
@@ -27,6 +27,13 @@ Synchook works by using [a git hook](https://git-scm.com/book/en/v2/Customizing-
 * And while only metdata (git log, sha, repo, branch, url) is sent, you can further [filter](#Filter-and-mask-true-repo-names) that based on your needs.
 * The backend server authorization component (Auth0/Okta) only requests enough permissions from your git identity provider (GitHub) to verify and matchup the metadata you send with the correct secondary tracking account which is based on your git identity but which has zero privileges to any of your repos.
 * Same with the [GitHub App](https://github.com/apps/kitchen-synchook), it required minimal permissions.
+
+## Is this just a *hack* or *gaming* the system?
+**Absolutely not.** The reason I wrote this was to capture my *ACTUAL* and *MEANINGFUL (though that part could be argued)* code contributions made using git as a tool and yet which fell outside of the scope of what GitHub did count or even could practically count (considering they don't own the entire software development pipeline... yet 🤨)
+
+As far as all the "solutions" out there to game the system... I'll just say this isn't one of them.
+
+The entire point is to more effectively capture your true workflow in an effort to build upon a positive feedback cycle.
 
 ## Things that normally get in the way of universal contribution tracking are...
 
@@ -90,8 +97,7 @@ The steps to use Synchook are simple:
       ![image](https://user-images.githubusercontent.com/123592097/217401982-74915c33-774a-4278-b9d8-1d4c747d7605.png)
 
 ## Options
-  * ### Filter and mask true repo names
-    <br>
+  * ### Filter and mask 🎭 true repo names
     To add additional privacy, you can filter repo names via the FILTER configuration elements using the syntax `FILTER=<match>:<replacement>` and the replacement name will be used for commits to the secondary repo.
 
     Example:
@@ -109,6 +115,22 @@ The steps to use Synchook are simple:
         ```
 
     **Note: Spaces in the repo folder name are not yet suppored.**
+
+  * ### Exclude repos
+    To exclude repos that are already directly counted by the git providers normal mechanism, you can use the `EXCLUDE` config key. See [this issue](https://github.com/synchook/synchook/issues/5) for more detail on what this option is for.
+
+    Example:
+      * The following configuration will exclude the GitHub repo nimv3 from being committed to the secondary repo as it would be redundant to do so. This configuration will exclude all branches of the nimv3 repo.
+
+        ```
+              EXCLUDE=github:nimv3
+        ```
+      * To simply exclude a single branch, you would use this configuration:
+      
+        ```
+              EXCLUDE=github:nimv3:master
+        ```
+    To get a better idea on exactly what you would need to add as your EXCLUDE config, just look at the secondary repo folder structure for a hint.
 
 ## FAQ
 

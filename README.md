@@ -11,6 +11,13 @@ Like many, much of my work is not in public GitHub projects. But after just addi
 
 ![Before after Synchook](https://user-images.githubusercontent.com/123592097/221391361-d54e21f6-443a-4f56-a164-601b66b7d30e.png)
 
+As well, now I can track [my daily commits](https://brakecode.com/synchook/?user=june07@github) in real-time...
+<div align="center">
+ 
+https://user-images.githubusercontent.com/123592097/222279962-21de6d8a-0463-478c-982b-f4716c09bf3a.mp4
+
+</div>
+
 ## Wishing for the solution Synchook provides...
 
 ![Synchook Wishes](https://user-images.githubusercontent.com/11353590/221730634-009f7e10-d2ed-4e79-8d65-2514148c9f24.gif)

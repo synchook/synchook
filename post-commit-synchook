@@ -100,7 +100,7 @@ for nda in $NDAS; do
     elif [ "$metadata" = "url" ]; then
         git_url=$nda_safe_metadata
     elif [ "$metadata" = "log" ]; then
-        git_log=$(echo $nda_safe_metadata | base64 $base64args)
+        git_log=$(echo "$nda_safe_metadata" | base64 $base64args)
     fi
 done
 

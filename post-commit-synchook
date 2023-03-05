@@ -88,7 +88,7 @@ for nda in $NDAS; do
     metadata=$(echo $nda | cut -f1 -d":")
     fakedata=$(echo $nda | cut -f2 -d":")
     nda_safe_metadata="*** redacted ***"
-    if [ -n $metadata -a -n $fakedata ]; then
+    if [ -n $metadata -a -n $fakedata -a $fakedata != $metadata ]; then
         nda_safe_metadata=$fakedata
     fi
     if [ "$metadata" = "host" ]; then

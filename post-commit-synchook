@@ -15,9 +15,10 @@ if [ -d $BRAKECODE_ENV_DIR2 ]; then
     ENV_FILE_PATH=${BRAKECODE_ENV_DIR2}/.env
 fi
 
-BRAKECODE_API_KEY=$(cat $ENV_FILE_PATH | grep BRAKECODE_API_KEY | grep -v "#" | cut -f2 -d"=")
-SYNCHOOK_HOST=$(cat $ENV_FILE_PATH | grep SYNCHOOK_HOST | grep -v "#" | cut -f2 -d"=")
+BRAKECODE_API_KEY=$(cat $ENV_FILE_PATH | grep -G "^BRAKECODE_API_KEY" | grep -v "#" | cut -f2 -d"=")
+SYNCHOOK_HOST=$(cat $ENV_FILE_PATH | grep -G "^SYNCHOOK_HOST" | grep -v "#" | cut -f2 -d"=")
 FILTERS=$(cat $ENV_FILE_PATH | grep -G "^FILTER=" | grep -v "#" | cut -f2 -d"=")
+NDAS=$(cat $ENV_FILE_PATH | grep -G "^NDA=" | grep -v "#" | cut -f2 -d"=")
 
 if [ -z "$SYNCHOOK_HOST" ]; then
     SYNCHOOK_HOST=$DEFAULT_SYNCHOOK_HOST
@@ -64,9 +65,9 @@ elif [ -z "$BRAKECODE_API_KEY" ]; then
     exit 0
 fi
 
-current=$(git branch --show-current 2>&1 > /dev/null)
-if [ $(echo $current | grep -c "error: unknown option") -ne 0 ]; then
-    current=$(git branch --list | grep "*" | cut -f2 -d" ")
+git_branch=$(git branch --show-current 2>&1 > /dev/null)
+if [ $(echo $git_branch | grep -c "error: unknown option") -ne 0 ]; then
+    git_branch=$(git branch --list | grep "*" | cut -f2 -d" ")
 fi
 
 git_repo=$(basename "`git rev-parse --show-toplevel`")
@@ -80,16 +81,40 @@ if [ $(echo $OSTYPE | egrep "darwin") ]; then
     base64args=""
 fi
 
+hostname=$(hostname)
+git_url=$(git config remote.origin.url)
+git_log=$(git log -1 HEAD | base64 $base64args)
+for nda in $NDAS; do
+    metadata=$(echo $nda | cut -f1 -d":")
+    fakedata=$(echo $nda | cut -f2 -d":")
+    nda_safe_metadata="*** redacted ***"
+    if [ -n $metadata -a -n $fakedata ]; then
+        nda_safe_metadata=$fakedata
+    fi
+    if [ "$metadata" = "host" ]; then
+        hostname=$nda_safe_metadata
+    elif [ "$metadata" = "repo" ]; then
+        git_repo=$nda_safe_metadata
+    elif [ "$metadata" = "branch" ]; then
+        git_branch=$nda_safe_metadata
+    elif [ "$metadata" = "url" ]; then
+        git_url=$nda_safe_metadata
+    elif [ "$metadata" = "log" ]; then
+        git_log=$nda_safe_metadata
+    fi
+done
+
 appConfig=$(echo "{
     \"git_user_email\": \"$(cat $ENV_FILE_PATH | egrep "^GIT_USER_EMAIL=" | cut -f2 -d"=" | tr "\n" "," | sed 's/,*$//g')\",
     \"exclude\": \"$(cat $ENV_FILE_PATH | egrep "^EXCLUDE=" | cut -f2 -d"=" | tr "\n" "," | sed 's/,*$//g')\"
 }" | jq -cr 'del(..|select(. == ""))' | base64 $base64args)
+
 data=$(echo "{
-    \"hostname\": \"$(hostname)\",
+    \"hostname\": \"$hostname\",
     \"git_repo\": \"$git_repo\",
-    \"git_branch\": \"$current\",
-    \"git_url\": \"$(git config remote.origin.url)\",
-    \"git_log\": \"$(git log -1 HEAD | base64 $base64args)\"
+    \"git_branch\": \"$git_branch\",
+    \"git_url\": \"$git_url\",
+    \"git_log\": \"$git_log\"
 }" | base64 $base64args)
 if [ $(which curl) ]; then
     response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \

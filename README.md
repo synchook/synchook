@@ -20,11 +20,20 @@ https://user-images.githubusercontent.com/123592097/222279962-21de6d8a-0463-478c
 
 And for those who might be bound to NDAs at their jobs, you can also redact/obfuscate some or everything about your commits...
 
+
+<div align="center">
+
 ![synchook-nda-feature](https://user-images.githubusercontent.com/123592097/223283388-e3671bff-3fda-4a21-80e8-54a18e9e9a56.gif)
+
+</div>
 
 ## Wishing for the solution Synchook provides...
 
+<div align="center">
+
 ![Synchook Wishes](https://user-images.githubusercontent.com/11353590/221730634-009f7e10-d2ed-4e79-8d65-2514148c9f24.gif)
+
+</div>
 
 Meaning that git commits you perform on other services such as [GitLab](https://gitlab.com/), [Bitbucket](https://bitbucket.org/), or [Code Commit](https://aws.amazon.com/codecommit/), or even locally, can all be counted and displayed on your Github graph.
 

@@ -18,6 +18,8 @@ https://user-images.githubusercontent.com/123592097/222279962-21de6d8a-0463-478c
 
 </div>
 
+And for those who might be bound to NDAs at their jobs, you can also redact/obfuscate some or everything about your commits...
+
 ## Wishing for the solution Synchook provides...
 
 ![Synchook Wishes](https://user-images.githubusercontent.com/11353590/221730634-009f7e10-d2ed-4e79-8d65-2514148c9f24.gif)

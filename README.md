@@ -11,15 +11,16 @@ Like many, much of my work is not in public GitHub projects. But after just addi
 
 ![Before after Synchook](https://user-images.githubusercontent.com/123592097/221391361-d54e21f6-443a-4f56-a164-601b66b7d30e.png)
 
-As well, now I can track [my daily commits](https://brakecode.com/synchook/?user=june07@github) in real-time...
+## Real-time Universal Git Contributions Graph
+With it you can now track your ([my](https://brakecode.com/synchook/?user=june07@github)) daily commits in real-time...
 <div align="center">
  
 https://user-images.githubusercontent.com/123592097/222279962-21de6d8a-0463-478c-982b-f4716c09bf3a.mp4
 
 </div>
 
-And for those who might be bound to NDAs at their jobs, you can also redact/obfuscate some or everything about your commits...
-
+## Work NDA's... no problem
+For those who might be bound to NDAs, you can also redact/obfuscate some or everything about your commits...
 
 <div align="center">
 
@@ -37,25 +38,25 @@ And for those who might be bound to NDAs at their jobs, you can also redact/obfu
 
 Meaning that git commits you perform on other services such as [GitLab](https://gitlab.com/), [Bitbucket](https://bitbucket.org/), or [Code Commit](https://aws.amazon.com/codecommit/), or even locally, can all be counted and displayed on your Github graph.
 
-## How does it work?
+# How does it work?
 
 Synchook works by using [a git hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) that calls its secure cloud service to sync your commit logs to a secondary GitHub repo. The secondary repo doesn't store any files but rather the commit metadata (git log, sha, repo, branch, url), thus privacy is maintained. Contributions to the secondary repo are then counted/reflected on your GitHub contributions graph.
 
-## Is it safe?
+# Is it safe?
 
 * Yes, since no code is actually sent anywhere and the hook is fully open source so you can verify that yourself.
 * And while only metdata (git log, sha, repo, branch, url) is sent, you can further [filter](#Filter-and-mask-true-repo-names) that based on your needs.
 * The backend server authorization component (Auth0/Okta) only requests enough permissions from your git identity provider (GitHub) to verify and matchup the metadata you send with the correct secondary tracking account which is based on your git identity but which has zero privileges to any of your repos.
 * Same with the [GitHub App](https://github.com/apps/kitchen-synchook), it required minimal permissions.
 
-## Is this just a *hack* or *gaming* the system?
+# Is this just a *hack* or *gaming* the system?
 **Absolutely not.** The reason I wrote this was to capture my *ACTUAL* and *MEANINGFUL (though that part could be argued)* code contributions made using git as a tool and yet which fell outside of the scope of what GitHub did count or even could practically count (considering they don't own the entire software development pipeline... yet 🤨)
 
 As far as all the "solutions" out there to game the system... I'll just say this isn't one of them.
 
 The entire point is to more effectively capture your true workflow in an effort to build upon a positive feedback cycle.
 
-## Things that normally get in the way of universal contribution tracking are...
+# Things that normally get in the way of universal contribution tracking are...
 
 * private repos
 * external repos (outside of GitHub)
@@ -65,7 +66,7 @@ The entire point is to more effectively capture your true workflow in an effort 
   
 I wrote Synchook because a lot of my development time (in private/external repos) wasn't reflected in my GitHub contribution graph and I found that a bit 😒.
 
-## How to use it?
+# How to use it?
 
 The steps to use Synchook are simple:
 
@@ -116,8 +117,8 @@ The steps to use Synchook are simple:
     * And on GitHub you will notice an update was made to your synchook repo.
       ![image](https://user-images.githubusercontent.com/123592097/217401982-74915c33-774a-4278-b9d8-1d4c747d7605.png)
 
-## Options
-  * ### Filter and mask 🎭 true repo names
+# Options
+  * ## Filter and mask 🎭 true repo names
     To add additional privacy, you can filter repo names via the FILTER configuration elements using the syntax `FILTER=<match>:<replacement>` and the replacement name will be used for commits to the secondary repo.
 
     Example:
@@ -136,7 +137,7 @@ The steps to use Synchook are simple:
 
     **Note: Spaces in the repo folder name are not yet suppored.**
 
-  * ### Exclude repos
+  * ## Exclude repos
     To exclude repos that are already directly counted by the git providers normal mechanism, you can use the `EXCLUDE` config key. See [this issue](https://github.com/synchook/synchook/issues/5) for more detail on what this option is for.
 
     Example:
@@ -151,10 +152,28 @@ The steps to use Synchook are simple:
               EXCLUDE=github:nimv3:master
         ```
     To get a better idea on exactly what you would need to add as your EXCLUDE config, just look at the secondary repo folder structure for a hint.
+  
+  * ## NDA feature
+    To exclude or redact some or even all metadata from your commits, you can use the `NDA` config key multiple times as required. If the NDA log key is used, a random time of day and commit sha will be generated for use in the secondary repo commit.
     
-![image](https://user-images.githubusercontent.com/123592097/223285229-cff3469a-2549-4d4e-a1f2-2fa77d2065be.png)
-![image](https://user-images.githubusercontent.com/123592097/223285422-ff3948b8-46ca-453d-b29b-d2ef931c6aac.png)
+  ![image](https://user-images.githubusercontent.com/123592097/223285229-cff3469a-2549-4d4e-a1f2-2fa77d2065be.png)
 
+The resulting commit will be found as such:
+
+  ![image](https://user-images.githubusercontent.com/123592097/223285422-ff3948b8-46ca-453d-b29b-d2ef931c6aac.png)
+
+And the folder structure will remain the same simply using *---REDACTED---* in the place of what NDA keys are used.
+
+    Example:
+      * The following configuration will fully exclude ALL metadata from being sent. 
+
+        ```
+              NDA=host
+              NDA=repo
+              NDA=branch
+              NDA=url
+              NDA=log
+        ```
 
 ## FAQ
 

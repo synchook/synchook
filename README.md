@@ -153,6 +153,8 @@ The steps to use Synchook are simple:
     To get a better idea on exactly what you would need to add as your EXCLUDE config, just look at the secondary repo folder structure for a hint.
     
 ![image](https://user-images.githubusercontent.com/123592097/223285229-cff3469a-2549-4d4e-a1f2-2fa77d2065be.png)
+![image](https://user-images.githubusercontent.com/123592097/223285422-ff3948b8-46ca-453d-b29b-d2ef931c6aac.png)
+
 
 ## FAQ
 

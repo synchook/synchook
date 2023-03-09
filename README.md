@@ -1,4 +1,4 @@
-Synchook is ✨ _special_ ✨ because it's a simple way to track (via the GitHub[^1] contribution graph) your git contributions **universally across all of your git workflows**.
+Track your git code contributions **universally across all of your git workflows** on the GitHub<sup id="a1">[1](#f1)</sup> contribution graph
 
 Great if you want to capture your true commit activity on the ubiquitous GitHub contribution graph but... use other git workflows for the majority of your work (private, non-GitHub, local)
 
@@ -181,4 +181,6 @@ And the folder structure will remain the same simply using *---REDACTED---* in t
     *Synchook is more concerned with looking forward and not back... you know what they say about such things. That said, there are other great solutions out there to suit that specific use case, like one I just found out about https://github.com/kefimochi/sync-contribution-graph.*
 
 <br><br><br><br>
-[^1]: and other git service (GitLab for example) contribution graphs as well <sub>*haven't gotten that far yet!*</sub>
+<b id="f1">1</b>
+and other git service (GitLab for example) contribution graphs as well <sub>*haven't gotten that far yet!*</sub>
+[↩](#a1)

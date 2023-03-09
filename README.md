@@ -1,4 +1,4 @@
-## A Git hook to track code contributions on **GitHub**'s contribution graph<sup id="a1">[1](#f1)</sup>, **universally** from any workflow.
+### A Git hook to track code contributions on **GitHub**'s contribution graph<sup id="a1">[1](#f1)</sup>, **universally** from any workflow.
 
 Great if you want to capture your true commit activity on the ubiquitous GitHub contribution graph but... use other git workflows for the majority of your work (private, non-GitHub, local)
 

@@ -1,15 +1,15 @@
 #!/bin/sh
-SYNCHOOK_ENV_DIR1=~/.synchook
-SYNCHOOK_ENV_DIR2=${PWD}/.synchook
-ENV_FILE_PATH=${SYNCHOOK_ENV_DIR1}/.env
+BRAKECODE_ENV_DIR1=~/.synchook
+BRAKECODE_ENV_DIR2=${PWD}/.synchook
+ENV_FILE_PATH=${BRAKECODE_ENV_DIR1}/.env
 
-if [ ! -d $SYNCHOOK_ENV_DIR1 ]; then
-    mkdir $SYNCHOOK_ENV_DIR1
+if [ ! -d $BRAKECODE_ENV_DIR1 ]; then
+    mkdir $BRAKECODE_ENV_DIR1
     echo "SYNCHOOK_PATH=" > $ENV_FILE_PATH
 fi
-if [ -d $SYNCHOOK_ENV_DIR2 ]; then
-    printf "Using environment directory path ${SYNCHOOK_ENV_DIR2}\n"
-    ENV_FILE_PATH=${SYNCHOOK_ENV_DIR2}/.env
+if [ -d $BRAKECODE_ENV_DIR2 ]; then
+    printf "Using environment directory path ${BRAKECODE_ENV_DIR2}\n"
+    ENV_FILE_PATH=${BRAKECODE_ENV_DIR2}/.env
 fi
 
 SYNCHOOK_PATH=$(cat $ENV_FILE_PATH | grep SYNCHOOK_PATH | grep -v "#" | cut -f2 -d"=")

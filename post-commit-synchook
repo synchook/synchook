@@ -51,7 +51,8 @@ elif [ -z "$BRAKECODE_API_KEY" ]; then
                 --header="x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" 2>&1 | egrep "\s200|^\"")
         fi
         if [ -n "$(echo $response | egrep "\s200")" ]; then
-            perl -pi -e "s/BRAKECODE_API_KEY=/BRAKECODE_API_KEY=${BRAKECODE_API_KEY}/g" $ENV_FILE_PATH
+	    # append the line if "BRAKECODE_API_KEY=" is missing
+            perl -pi -e "s/BRAKECODE_API_KEY=/BRAKECODE_API_KEY=${BRAKECODE_API_KEY}/g || $_ .= BRAKECODE_API_KEY=${BRAKECODE_API_KEY}>\n" $ENV_FILE_PATH
             echo "Saved BRAKECODE_API_KEY to $ENV_FILE_PATH"
             printf "Synchok is now enabled!\n\n"
 	    exit 1

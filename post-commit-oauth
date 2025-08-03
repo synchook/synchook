@@ -1,23 +1,23 @@
 #!/bin/bash
 exit 0
-ENV_FILE_PATH=~/.brakecode/.env
+ENV_FILE_PATH=~/.synchook/.env
 
-if [[ -z ${BRAKECODE_API_KEY} ]]; then
-    BRAKECODE_API_KEY=$(cat $ENV_FILE_PATH  | grep BRAKECODE_API_KEY | cut -f2 -d"=");
-    if [[ -z ${BRAKECODE_API_KEY} ]]; then
-        read -sp "Please enter your BrakeCODE API Key: " BRAKECODE_API_KEY;
-        if [[ -z ${BRAKECODE_API_KEY} ]]; then
+if [[ -z ${SYNCHOOK_API_KEY} ]]; then
+    SYNCHOOK_API_KEY=$(cat $ENV_FILE_PATH  | grep SYNCHOOK_API_KEY | cut -f2 -d"=");
+    if [[ -z ${SYNCHOOK_API_KEY} ]]; then
+        read -sp "Please enter your SyncHook API Key: " SYNCHOOK_API_KEY;
+        if [[ -z ${SYNCHOOK_API_KEY} ]]; then
             exit 1;
         else
-            echo "BRAKECODE_API_KEY=${BRAKECODE_API_KEY}" >> $ENV_FILE_PATH;
-            echo "Saved BRAKECODE_API_KEY to $ENV_FILE_PATH";
+            echo "SYNCHOOK_API_KEY=${SYNCHOOK_API_KEY}" >> $ENV_FILE_PATH;
+            echo "Saved SYNCHOOK_API_KEY to $ENV_FILE_PATH";
         fi
     fi
 fi
 
 response=$(curl -s -k -L https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
     -H 'Content-Type: application/json' \
-    -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
+    -H "x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" \
     -d "{ \"git_url\": \"$(git config remote.origin.url | base64 -w0)\", \"git_log\": \"$(git log -1 HEAD | base64 -w0)\" }")
 
 if [[ $(echo $response | jq '.authenticate // empty') ]]; then
@@ -49,7 +49,7 @@ if [[ $(echo $response | jq '.authenticate // empty') ]]; then
 
     curl -s -k -L https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
         -H 'Content-Type: application/json' \
-        -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
+        -H "x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" \
         -d "{ \"git_url\": \"$(git config remote.origin.url | base64 -w0)\", \"git_log\": \"$(git log -1 HEAD | base64 -w0)\", \"github_access_token\": \"$(echo $auth_response | jq -r '.access_token')\" }"
 fi
 

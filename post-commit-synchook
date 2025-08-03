@@ -1,21 +1,21 @@
 #!/bin/sh
-BRAKECODE_ENV_DIR1=~/.brakecode
-BRAKECODE_ENV_DIR2=${PWD}/.brakecode
-ENV_FILE_PATH=${BRAKECODE_ENV_DIR1}/.env
-DEFAULT_SYNCHOOK_HOST=api.brakecode.com
+SYNCHOOK_ENV_DIR1=~/.synchook
+SYNCHOOK_ENV_DIR2=${PWD}/.synchook
+ENV_FILE_PATH=${SYNCHOOK_ENV_DIR1}/.env
+DEFAULT_SYNCHOOK_HOST=api.june07.com
 CURL_OPTIONS="-k"
 WGET_OPTIONS="--no-check-certificate"
 
-if [ ! -d $BRAKECODE_ENV_DIR1 ]; then
-    mkdir $BRAKECODE_ENV_DIR1
-    echo "BRAKECODE_API_KEY=" > $ENV_FILE_PATH
+if [ ! -d $SYNCHOOK_ENV_DIR1 ]; then
+    mkdir $SYNCHOOK_ENV_DIR1
+    echo "SYNCHOOK_API_KEY=" > $ENV_FILE_PATH
 fi
-if [ -d $BRAKECODE_ENV_DIR2 ]; then
-    printf "Using environment directory path ${BRAKECODE_ENV_DIR2}\n"
-    ENV_FILE_PATH=${BRAKECODE_ENV_DIR2}/.env
+if [ -d $SYNCHOOK_ENV_DIR2 ]; then
+    printf "Using environment directory path ${SYNCHOOK_ENV_DIR2}\n"
+    ENV_FILE_PATH=${SYNCHOOK_ENV_DIR2}/.env
 fi
 
-BRAKECODE_API_KEY=$(cat $ENV_FILE_PATH | grep -G "^BRAKECODE_API_KEY" | grep -v "#" | cut -f2 -d"=")
+SYNCHOOK_API_KEY=$(cat $ENV_FILE_PATH | grep -G "^SYNCHOOK_API_KEY" | grep -v "#" | cut -f2 -d"=")
 SYNCHOOK_HOST=$(cat $ENV_FILE_PATH | grep -G "^SYNCHOOK_HOST" | grep -v "#" | cut -f2 -d"=")
 FILTERS=$(cat $ENV_FILE_PATH | grep -G "^FILTER=" | grep -v "#" | cut -f2 -d"=")
 NDAS=$(cat $ENV_FILE_PATH | grep -G "^NDA=" | grep -v "#" | cut -f2 -d"=")
@@ -25,16 +25,16 @@ if [ -z "$SYNCHOOK_HOST" ]; then
     CURL_OPTIONS=
     WGET_OPTIONS=
 fi
-if [ -z "$BRAKECODE_API_KEY" -a $(env | grep -c -e "^GIT_") -gt 1 ]; then
-        printf "Your BrakeCODE API Key is missing.\n"
-        printf "Please run this $0 from a normal shell to enter your BrakeCODE API Key, or update $ENV_FILE_PATH.\n"
+if [ -z "$SYNCHOOK_API_KEY" -a $(env | grep -c -e "^GIT_") -gt 1 ]; then
+        printf "Your SyncHook API Key is missing.\n"
+        printf "Please run this $0 from a normal shell to enter your SyncHook API Key, or update $ENV_FILE_PATH.\n"
 	    printf "Synchook exiting...\n\n"
         exit 1
-elif [ -z "$BRAKECODE_API_KEY" ]; then
-    printf "Please enter your BrakeCODE API Key: "
-    read -r BRAKECODE_API_KEY
-    if [ -z "$BRAKECODE_API_KEY" ]; then
-	printf "Go to https://brakecode.com/dashboard?panel=synchook to generate a FREE API Key.\n"
+elif [ -z "$SYNCHOOK_API_KEY" ]; then
+    printf "Please enter your SyncHook API Key: "
+    read -r SYNCHOOK_API_KEY
+    if [ -z "$SYNCHOOK_API_KEY" ]; then
+	printf "Go to https://synchook.june07.com to generate a FREE API Key.\n"
 	printf "Synchook exiting...\n\n"
 	exit 1
     else
@@ -43,22 +43,22 @@ elif [ -z "$BRAKECODE_API_KEY" ]; then
             response=$(curl -s ${CURL_OPTIONS} -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
                 -H 'Content-Type: application/json' \
                 -H "x-environment: \"canary\"" \
-                -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }")
+                -H "x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }")
         else
             response=$(wget -q -O - $WGET_OPTIONS --max-redirect=20 --server-response URL-response https://$SYNCHOOK_HOST/api/v1/synchook \
                 --header='Content-Type: application/json' \
                 --header="x-environment: \"canary\"" \
-                --header="x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" 2>&1 | egrep "\s200|^\"")
+                --header="x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" 2>&1 | egrep "\s200|^\"")
         fi
         if [ -n "$(echo $response | egrep "\s200")" ]; then
-	    # append the line if "BRAKECODE_API_KEY=" is missing
-            perl -pi -e "s/BRAKECODE_API_KEY=/BRAKECODE_API_KEY=${BRAKECODE_API_KEY}/g || $_ .= BRAKECODE_API_KEY=${BRAKECODE_API_KEY}>\n" $ENV_FILE_PATH
-            echo "Saved BRAKECODE_API_KEY to $ENV_FILE_PATH"
+	    # append the line if "SYNCHOOK_API_KEY=" is missing
+            perl -pi -e "s/SYNCHOOK_API_KEY=/SYNCHOOK_API_KEY=${SYNCHOOK_API_KEY}/g || $_ .= SYNCHOOK_API_KEY=${SYNCHOOK_API_KEY}>\n" $ENV_FILE_PATH
+            echo "Saved SYNCHOOK_API_KEY to $ENV_FILE_PATH"
             printf "Synchok is now enabled!\n\n"
 	    exit 1
 	else
 	    printf "server response: $response\n\n"
-	    printf "Go to https://brakecode.com/dashboard?panel=synchook to verify and/or generate a FREE API Key.\n"
+	    printf "Go to https://synchook.june07.com to verify and/or generate a FREE API Key.\n"
         printf "Synchook exiting...\n\n"
 	    exit 1
 	fi
@@ -120,7 +120,7 @@ data=$(echo "{
 if [ $(which curl) ]; then
     response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
         -H 'Content-Type: text/plain' \
-        -H "x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
+        -H "x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" \
         -H "x-environment: \"canary\"" \
         -H "x-app-config: \"${appConfig}\"" \
         -d ${data})
@@ -128,7 +128,7 @@ else
     response=$(wget -q -O - $WGET_OPTIONS --max-redirect=20 --server-response URL-response https://$SYNCHOOK_HOST/api/v1/synchook \
         --header='Content-Type: text/plain' \
         --header="x-environment: \"canary\"" \
-        --header="x-api-key: { \"apikey\": \"${BRAKECODE_API_KEY}\" }" \
+        --header="x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" \
         --header="x-app-config: \"${appConfig}\"" \
         --post-data="${data}" 2>&1 | egrep "\s200|^\"")
 fi

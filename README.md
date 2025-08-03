@@ -12,7 +12,7 @@ Like many, much of my work is not in public GitHub projects. But after just addi
 ![Before after Synchook](https://user-images.githubusercontent.com/123592097/221391361-d54e21f6-443a-4f56-a164-601b66b7d30e.png)
 
 ## Real-time Universal Git Contributions Graph
-With it you can now track your ([my](https://brakecode.com/synchook/?user=june07@github)) daily commits in real-time...
+With it you can now track your ([my](https://june07.com/synchook/?user=june07@github)) daily commits in real-time...
 <div align="center">
  
 https://user-images.githubusercontent.com/123592097/222279962-21de6d8a-0463-478c-982b-f4716c09bf3a.mp4
@@ -71,21 +71,21 @@ I wrote Synchook because a lot of my development time (in private/external repos
 The steps to use Synchook are simple:
 
 1. For step 1 there are two options...
-    * Sign up and obtain a free API key at https://brakecode.com/synchook.
+    * Sign up and obtain a free API key at https://june07.com/synchook.
 
-        * If you're currently a BrakeCODE user just link your GitHub account using the BrakeCODE Dashboard, and new users simply need to signup by authenticating with their GitHub account.
+        * If you're currently a SyncHook user just link your GitHub account using the SyncHook Dashboard, and new users simply need to signup by authenticating with their GitHub account.
         * A secondary tracking repo is automatically created for you at https://github.com/synchook/your_github_username. You will receive an invitation to be the sole collaborator (excluding Synchook) for this secondary repo and have access via synchook as well.
-        * The BrakeCODE Dashboard will show your commit activity in real time from the Synchook panel.
+        * The SyncHook Dashboard will show your commit activity in real time from the Synchook panel.
         <br><br>
 
         My Synchook repo for example: [https://github.com/synchook/june07](https://github.com/synchook/june07)
 
-        **IMPORTANT NOTE**: Currently you must use the Canary version of BrakeCODE Dashboard to access this feature.
+        **IMPORTANT NOTE**: Currently you must use the Canary version of SyncHook Dashboard to access this feature.
     * Or use the GitHub App at https://github.com/apps/kitchen-synchook
-        * The App will allow you to try a limited version of Synchook using a shared API key ([shared API key endpoint](https://api.brakecode.com/api/v1/synchook/apikey))
+        * The App will allow you to try a limited version of Synchook using a shared API key ([shared API key endpoint](https://api.june07.com/api/v1/synchook/apikey))
         * The App requests minimal permissions and is used to give you collaborator access to the shared *kitchen sync* repo https://github.com/synchook/kitchen where you will see your commit updates.
         * Your own commit graph will start reflecting commits made to the shared kitchen sync repo.
-        * You won't have access to the BrakeCODE Dashboard which provides additional features.<br><br>
+        * You won't have access to the SyncHook Dashboard which provides additional features.<br><br>
 
 2. Then configure the [post-commit](https://github.com/synchook/synchook/blob/main/post-commit) hook in your .git/hooks directory.
     * This step can be done in a number of ways (symlink, file copy, etc) but the way I recommend is by cloning the synchook repo and then symlinking the needed hooks. This way you can get any updates accross all repos using the hooks with a single git pull.
@@ -111,7 +111,7 @@ The steps to use Synchook are simple:
     * As you can see in the yellow highlighted area, all of my external commits are now being reflected in my primary GitHub account contribution graph!
       ![image](https://user-images.githubusercontent.com/123592097/215356537-042db8e5-f5aa-4d6c-84f2-c873887c020a.png)
 
-    * On the BrakeCODE dashboard you will be able to see your realtime API call log.
+    * On the SyncHook dashboard you will be able to see your realtime API call log.
       ![image](https://user-images.githubusercontent.com/123592097/217401608-afd32412-e6ca-4a8d-9308-e70780fa103f.png)
       
     * And on GitHub you will notice an update was made to your synchook repo.

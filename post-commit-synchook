@@ -1,18 +1,17 @@
-#!/bin/sh
+#!/bin/sh -x
 SYNCHOOK_ENV_DIR1=~/.synchook
 SYNCHOOK_ENV_DIR2=${PWD}/.synchook
 ENV_FILE_PATH=${SYNCHOOK_ENV_DIR1}/.env
-DEFAULT_SYNCHOOK_HOST=api.june07.com
 CURL_OPTIONS="-k"
 WGET_OPTIONS="--no-check-certificate"
 
 if [ ! -d $SYNCHOOK_ENV_DIR1 ]; then
-    mkdir $SYNCHOOK_ENV_DIR1
-    echo "SYNCHOOK_API_KEY=" > $ENV_FILE_PATH
+	mkdir $SYNCHOOK_ENV_DIR1
+	echo "SYNCHOOK_API_KEY=" >$ENV_FILE_PATH
 fi
 if [ -d $SYNCHOOK_ENV_DIR2 ]; then
-    printf "Using environment directory path ${SYNCHOOK_ENV_DIR2}\n"
-    ENV_FILE_PATH=${SYNCHOOK_ENV_DIR2}/.env
+	printf "Using environment directory path ${SYNCHOOK_ENV_DIR2}\n"
+	ENV_FILE_PATH=${SYNCHOOK_ENV_DIR2}/.env
 fi
 
 SYNCHOOK_API_KEY=$(cat $ENV_FILE_PATH | grep -G "^SYNCHOOK_API_KEY" | grep -v "#" | cut -f2 -d"=")
@@ -21,88 +20,100 @@ FILTERS=$(cat $ENV_FILE_PATH | grep -G "^FILTER=" | grep -v "#" | cut -f2 -d"=")
 NDAS=$(cat $ENV_FILE_PATH | grep -G "^NDA=" | grep -v "#" | cut -f2 -d"=")
 
 if [ -z "$SYNCHOOK_HOST" ]; then
-    SYNCHOOK_HOST=$DEFAULT_SYNCHOOK_HOST
-    CURL_OPTIONS=
-    WGET_OPTIONS=
+	SYNCHOOK_HOST=$SYNCHOOK_HOST
 fi
+if [ -z "$CURL_OPTIONS" ]; then
+	CURL_OPTIONS=$CURL_OPTIONS
+fi
+if [ -z "$WGET_OPTIONS" ]; then
+	WGET_OPTIONS=$WGET_OPTIONS
+fi
+
 if [ -z "$SYNCHOOK_API_KEY" -a $(env | grep -c -e "^GIT_") -gt 1 ]; then
-        printf "Your SyncHook API Key is missing.\n"
-        printf "Please run this $0 from a normal shell to enter your SyncHook API Key, or update $ENV_FILE_PATH.\n"
-	    printf "Synchook exiting...\n\n"
-        exit 1
-elif [ -z "$SYNCHOOK_API_KEY" ]; then
-    printf "Please enter your SyncHook API Key: "
-    read -r SYNCHOOK_API_KEY
-    if [ -z "$SYNCHOOK_API_KEY" ]; then
-	printf "Go to https://synchook.june07.com to generate a FREE API Key.\n"
+	printf "Your SyncHook API Key is missing.\n"
+	printf "Please run this $0 from a normal shell to enter your SyncHook API Key, or update $ENV_FILE_PATH.\n"
 	printf "Synchook exiting...\n\n"
 	exit 1
-    else
-	printf "Validating key...\n"
-        if [ $(which curl) ]; then
-            response=$(curl -s ${CURL_OPTIONS} -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
-                -H 'Content-Type: application/json' \
-                -H "x-environment: \"canary\"" \
-                -H "x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }")
-        else
-            response=$(wget -q -O - $WGET_OPTIONS --max-redirect=20 --server-response URL-response https://$SYNCHOOK_HOST/api/v1/synchook \
-                --header='Content-Type: application/json' \
-                --header="x-environment: \"canary\"" \
-                --header="x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" 2>&1 | egrep "\s200|^\"")
-        fi
-        if [ -n "$(echo $response | egrep "\s200")" ]; then
-	    # append the line if "SYNCHOOK_API_KEY=" is missing
-            perl -pi -e "s/SYNCHOOK_API_KEY=/SYNCHOOK_API_KEY=${SYNCHOOK_API_KEY}/g || $_ .= SYNCHOOK_API_KEY=${SYNCHOOK_API_KEY}>\n" $ENV_FILE_PATH
-            echo "Saved SYNCHOOK_API_KEY to $ENV_FILE_PATH"
-            printf "Synchok is now enabled!\n\n"
-	    exit 1
+elif [ -z "$SYNCHOOK_API_KEY" ]; then
+	printf "Please enter your SyncHook API Key: "
+	read -r SYNCHOOK_API_KEY
+	if [ -z "$SYNCHOOK_API_KEY" ]; then
+		printf "Go to https://synchook.june07.com to generate a FREE API Key.\n"
+		printf "Synchook exiting...\n\n"
+		exit 1
 	else
-	    printf "server response: $response\n\n"
-	    printf "Go to https://synchook.june07.com to verify and/or generate a FREE API Key.\n"
-        printf "Synchook exiting...\n\n"
-	    exit 1
+		printf "Validating key...\n"
+		curlCommand="curl -s ${CURL_OPTIONS} -L -w ' %{response_code}' https://${SYNCHOOK_HOST}/v1/synchook \
+            -H 'Content-Type: application/json' \
+            -H \"x-api-key: { \\\"apikey\\\": \\\"${SYNCHOOK_API_KEY}\\\" }\"
+        "
+		if [ -n "$DEBUG" ]; then
+			printf "curl command: $curlCommand\n"
+		fi
+		if [ $(which curl) ]; then
+			response=$(eval "$curlCommand")
+		else
+			response=$(wget -q -O - $WGET_OPTIONS --max-redirect=20 --server-response URL-response https://$SYNCHOOK_HOST/v1/synchook \
+				--header='Content-Type: application/json' \
+				--header="x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" 2>&1 | egrep "\s200|^\"")
+		fi
+		if [ -n "$(echo $response | egrep "\s200")" ]; then
+			# append the line if "SYNCHOOK_API_KEY=" is missing
+            if [ -z "$(cat $ENV_FILE_PATH | grep -G "^SYNCHOOK_API_KEY=")" ]; then
+                echo "SYNCHOOK_API_KEY=${SYNCHOOK_API_KEY}" >> "$ENV_FILE_PATH"
+            else
+                perl -pi -e "s/^SYNCHOOK_API_KEY=.*/SYNCHOOK_API_KEY=${SYNCHOOK_API_KEY}/" "$ENV_FILE_PATH"
+            fi
+			echo "Saved SYNCHOOK_API_KEY to $ENV_FILE_PATH"
+			printf "Synchok is now enabled!\n\n"
+			exit 1
+		else
+			printf "server response: $response\n\n"
+			printf "Go to https://synchook.june07.com to verify and/or generate a FREE API Key.\n"
+			printf "Synchook exiting...\n\n"
+			exit 1
+		fi
 	fi
-    fi
-    exit 0
+	exit 0
 fi
 
-git_branch=$(git branch --show-current 2>&1 > /dev/null)
+git_branch=$(git branch --show-current 2>&1 >/dev/null)
 if [ $(echo $git_branch | grep -c "error: unknown option") -ne 0 ]; then
-    git_branch=$(git branch --list | grep "*" | cut -f2 -d" ")
+	git_branch=$(git branch --list | grep "*" | cut -f2 -d" ")
 fi
 
-git_repo=$(basename "`git rev-parse --show-toplevel`")
+git_repo=$(basename "$(git rev-parse --show-toplevel)")
 for filter in $FILTERS; do
-    match=$(echo $filter | cut -f1 -d":")
-    replacement=$(echo $filter | cut -f2 -d":")
-    git_repo=$(echo $git_repo | sed s/$match/$replacement/g)
+	match=$(echo $filter | cut -f1 -d":")
+	replacement=$(echo $filter | cut -f2 -d":")
+	git_repo=$(echo $git_repo | sed s/$match/$replacement/g)
 done
 base64args="-w0"
 if [ $(echo $OSTYPE | egrep "darwin") ]; then
-    base64args=""
+	base64args=""
 fi
 
 hostname=$(hostname)
 git_url=$(git config remote.origin.url)
 git_log=$(git log -1 HEAD | base64 $base64args)
 for nda in $NDAS; do
-    metadata=$(echo $nda | cut -f1 -d":")
-    fakedata=$(echo $nda | cut -f2 -d":")
-    nda_safe_metadata="*** redacted ***"
-    if [ -n $metadata -a -n $fakedata -a $fakedata != $metadata ]; then
-        nda_safe_metadata=$fakedata
-    fi
-    if [ "$metadata" = "host" ]; then
-        hostname=$nda_safe_metadata
-    elif [ "$metadata" = "repo" ]; then
-        git_repo=$nda_safe_metadata
-    elif [ "$metadata" = "branch" ]; then
-        git_branch=$nda_safe_metadata
-    elif [ "$metadata" = "url" ]; then
-        git_url=$nda_safe_metadata
-    elif [ "$metadata" = "log" ]; then
-        git_log=$(echo "$nda_safe_metadata" | base64 $base64args)
-    fi
+	metadata=$(echo $nda | cut -f1 -d":")
+	fakedata=$(echo $nda | cut -f2 -d":")
+	nda_safe_metadata="*** redacted ***"
+	if [ -n $metadata -a -n $fakedata -a $fakedata != $metadata ]; then
+		nda_safe_metadata=$fakedata
+	fi
+	if [ "$metadata" = "host" ]; then
+		hostname=$nda_safe_metadata
+	elif [ "$metadata" = "repo" ]; then
+		git_repo=$nda_safe_metadata
+	elif [ "$metadata" = "branch" ]; then
+		git_branch=$nda_safe_metadata
+	elif [ "$metadata" = "url" ]; then
+		git_url=$nda_safe_metadata
+	elif [ "$metadata" = "log" ]; then
+		git_log=$(echo "$nda_safe_metadata" | base64 $base64args)
+	fi
 done
 
 appConfig=$(echo "{
@@ -118,26 +129,37 @@ data=$(echo "{
     \"git_log\": \"$git_log\"
 }" | base64 $base64args)
 if [ $(which curl) ]; then
-    response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/api/v1/synchook \
-        -H 'Content-Type: text/plain' \
-        -H "x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" \
-        -H "x-environment: \"canary\"" \
-        -H "x-app-config: \"${appConfig}\"" \
-        -d ${data})
+	response=$(curl -s -k -L -w ' %{response_code}' https://$SYNCHOOK_HOST/v1/synchook \
+		-H 'Content-Type: text/plain' \
+		-H "x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" \
+		-H "x-app-config: \"${appConfig}\"" \
+		-d ${data})
 else
-    response=$(wget -q -O - $WGET_OPTIONS --max-redirect=20 --server-response URL-response https://$SYNCHOOK_HOST/api/v1/synchook \
-        --header='Content-Type: text/plain' \
-        --header="x-environment: \"canary\"" \
-        --header="x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" \
-        --header="x-app-config: \"${appConfig}\"" \
-        --post-data="${data}" 2>&1 | egrep "\s200|^\"")
+	response=$(wget -q -O - $WGET_OPTIONS --max-redirect=20 --server-response URL-response https://$SYNCHOOK_HOST/v1/synchook \
+		--header='Content-Type: text/plain' \
+		--header="x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" \
+		--header="x-app-config: \"${appConfig}\"" \
+		--post-data="${data}" 2>&1 | egrep "\s200|^\"")
 fi
 
-if [ -z "$(echo $response | egrep "\s200")" ]; then
-    printf "\n$response\n"
-    printf "Sync failed. Synchook exiting...\n\n"
-    exit 1
+http_code=$(echo "$response" | awk '{print $NF}')
+body=$(echo "$response" | sed 's/ [0-9]\{3\}$//')
+
+if [ "$http_code" != "200" ]; then
+  # Try to pretty-print JSON error if jq is available
+  if command -v jq >/dev/null 2>&1; then
+    if echo "$body" | jq . >/dev/null 2>&1; then
+      printf "\nSync failed with HTTP status %s:\n%s\n\n" "$http_code" "$(echo "$body" | jq .)"
+    else
+      printf "\nSync failed with HTTP status %s (malformed JSON):\n%s\n\n" "$http_code" "$body"
+    fi
+  else
+    printf "\nSync failed with HTTP status %s:\n%s\n\n" "$http_code" "$body"
+  fi
+  exit 1
 fi
+
+printf "Sync succeeded:\n%s\n" "$body"
 
 printf "\nSynchook successfully synced commit!\n\n"
 exit 0

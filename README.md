@@ -82,7 +82,7 @@ The steps to use Synchook are simple:
 
         **IMPORTANT NOTE**: Currently you must use the Canary version of SyncHook Dashboard to access this feature.
     * Or use the GitHub App at https://github.com/apps/kitchen-synchook
-        * The App will allow you to try a limited version of Synchook using a shared API key ([shared API key endpoint](https://api.june07.com/api/v1/synchook/apikey))
+        * The App will allow you to try a limited version of Synchook using a shared API key ([shared API key endpoint](https://api.june07.com/v1/synchook/apikey))
         * The App requests minimal permissions and is used to give you collaborator access to the shared *kitchen sync* repo https://github.com/synchook/kitchen where you will see your commit updates.
         * Your own commit graph will start reflecting commits made to the shared kitchen sync repo.
         * You won't have access to the SyncHook Dashboard which provides additional features.<br><br>

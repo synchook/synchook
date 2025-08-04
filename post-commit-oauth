@@ -15,7 +15,7 @@ if [[ -z ${SYNCHOOK_API_KEY} ]]; then
     fi
 fi
 
-response=$(curl -s -k -L https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
+response=$(curl -s -k -L https://8w1i.ngrok-dns.june07.com/v1/synchook \
     -H 'Content-Type: application/json' \
     -H "x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" \
     -d "{ \"git_url\": \"$(git config remote.origin.url | base64 -w0)\", \"git_log\": \"$(git log -1 HEAD | base64 -w0)\" }")
@@ -47,7 +47,7 @@ if [[ $(echo $response | jq '.authenticate // empty') ]]; then
         exit 1;
     fi
 
-    curl -s -k -L https://8w1i.ngrok-dns.june07.com/api/v1/synchook \
+    curl -s -k -L https://8w1i.ngrok-dns.june07.com/v1/synchook \
         -H 'Content-Type: application/json' \
         -H "x-api-key: { \"apikey\": \"${SYNCHOOK_API_KEY}\" }" \
         -d "{ \"git_url\": \"$(git config remote.origin.url | base64 -w0)\", \"git_log\": \"$(git log -1 HEAD | base64 -w0)\", \"github_access_token\": \"$(echo $auth_response | jq -r '.access_token')\" }"
